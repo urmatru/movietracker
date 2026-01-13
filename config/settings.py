@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'movies',
     'reviews',
     'users',
+    'backend.pages',
 
 ]
 

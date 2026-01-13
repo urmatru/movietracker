@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ movie.title }}</h2>
+
+<h3>Reviews</h3>
+
+<ul>
+    {% for review in reviews %}
+        <li>
+            <strong>{{ review.user.username }}</strong>:
+            {{ review.rating }}/10
+            <br>
+            {{ review.comment }}
+        </li>
+    {% empty %}
+        <li>No reviews yet</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'movies:movie_list' %}">← Back to movies</a>
+{% endblock %}
