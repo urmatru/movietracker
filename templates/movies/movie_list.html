@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Movies</h2>
+<h2>Movies with Reviews</h2>
 
-<ul>
-    {% for movie in movies %}
-        <li>
-            <strong>{{ movie.title }}</strong>
-            {% if movie.year %} ({{ movie.year }}){% endif %}
-        </li>
-    {% empty %}
-        <li>No movies yet</li>
-    {% endfor %}
-</ul>
+<form method="get" action="{% url 'movies:search' %}">
+    <input type="text" name="q" placeholder="Movie title" value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<div>
+{% for movie in movies %}
+    <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+        <h3>{{ movie.title }} ({{ movie.year }})</h3>
+        {% if movie.poster %}
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}" width="150">
+        {% endif %}
+        <p>{{ movie.description|truncatewords:30 }}</p>
+
+        <p><strong>Average rating:</strong> {{ movie.avg_rating|floatformat:1 }} / 10 ({{ movie.num_reviews }} reviews)</p>
+
+        <a href="{% url 'movies:movie_detail' movie.id %}">View details →</a>
+    </div>
+{% empty %}
+    <p>No movies with reviews found.</p>
+{% endfor %}
+</div>
 {% endblock %}

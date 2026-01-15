@@ -98,7 +98,7 @@
 - Базовые модели (Film, UserFilm) +
 - Админка (custom: register models, admin details как list_display, search_fields) + 
 - Миграции +
-- Apps: pages (home/about), accounts (user auth), films (Film model), reviews (UserFilm как comments/reviews)
+- Apps: pages (home/about), accounts (user auth), films (Film model), reviews (UserFilm как comments/reviews) + 
 
 ### Этап 2. Доменные модели (Models syntax, relations)
 - Film (с ImageField для постеров, media details)
@@ -158,3 +158,4 @@
 - Сложная аналитика (stats beyond averages)
 - Страница с последними оценками пользователей
 - Полный React frontend (если не добавить в этап 5)
+- Окно с most watched movie на главной

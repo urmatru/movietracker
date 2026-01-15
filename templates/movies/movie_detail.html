@@ -1,17 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ movie.title }}</h2>
+{% if movie %}
+<h2>{{ movie.title }} ({{ movie.year }})</h2>
+
+{% if movie.poster %}
+    <img src="{{ movie.poster }}" alt="{{ movie.title }}" width="200">
+{% endif %}
+
+<p><strong>Description:</strong> {{ movie.description }}</p>
+
+<!-- {% if movie.omdb_data %}
+    <p><strong>Genre:</strong> {{ movie.omdb_data.Genre }}</p>
+    <p><strong>Director:</strong> {{ movie.omdb_data.Director }}</p>
+    <p><strong>Actors:</strong> {{ movie.omdb_data.Actors }}</p>
+    <p><strong>Language:</strong> {{ movie.omdb_data.Language }}</p>
+    <p><strong>Country:</strong> {{ movie.omdb_data.Country }}</p>
+    <p><strong>IMDb Rating:</strong> {{ movie.omdb_data.imdbRating }}</p>
+{% endif %} -->
 
 <h3>Reviews</h3>
-
 <ul>
     {% for review in reviews %}
         <li>
-            <strong>{{ review.user.username }}</strong>:
-            {{ review.rating }}/10
-            <br>
-            {{ review.comment }}
+            <strong>{{ review.user.username }}</strong>: {{ review.rating }}/10
+            <br>{{ review.comment }}
         </li>
     {% empty %}
         <li>No reviews yet</li>
@@ -19,4 +32,8 @@
 </ul>
 
 <a href="{% url 'movies:movie_list' %}">← Back to movies</a>
+
+{% else %}
+<p>No movie found for "{{ query }}"</p>
+{% endif %}
 {% endblock %}

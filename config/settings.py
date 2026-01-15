@@ -11,10 +11,15 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# .env
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -128,3 +133,16 @@ STATIC_URL = "static/"
 # user
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+
+# api 
+
+OMDB_API_KEY = os.environ.get('OMDB_API_KEY')
+OMDB_BASE_URL = "http://www.omdbapi.com/"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "omdb-cache",
+    }
+}
