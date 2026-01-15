@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Add Movie to Your List</h2>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search movie..." value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+{% if movie %}
+    <h3>{{ movie.title }} ({{ movie.year }})</h3>
+    {% if movie.poster %}
+        <img src="{{ movie.poster }}" width="150" alt="{{ movie.title }}">
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Review</button>
+    </form>
+{% elif query %}
+    <p>No movie found for "{{ query }}"</p>
+{% endif %}
+
+<a href="{% url 'users:profile' %}">← Back to profile</a>
+{% endblock %}

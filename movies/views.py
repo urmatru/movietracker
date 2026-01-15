@@ -8,7 +8,11 @@ def movie_list(request):
     movies = Movie.objects.annotate(
         num_reviews=Count('movie_reviews'),
         avg_rating=Avg('movie_reviews__rating'),
-    ).filter(num_reviews__gt=0)
+    ).filter(
+        num_reviews__gt=0
+    ).order_by(
+        '-avg_rating'
+    )
 
     return render(request, "movies/movie_list.html", {"movies": movies})
 

@@ -31,8 +31,7 @@ class OMDBClient:
         params_str = json.dumps(params, sort_keys=True)
         hash_key = hashlib.md5(params_str.encode()).hexdigest()
         return f"omdb:{hash_key}"
-
-
+    
     def _get(self, params):
         """
         Низкоуровневый метод для выполнения GET-запроса к OMDb.

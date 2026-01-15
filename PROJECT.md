@@ -101,14 +101,14 @@
 - Apps: pages (home/about), accounts (user auth), films (Film model), reviews (UserFilm как comments/reviews) + 
 
 ### Этап 2. Доменные модели (Models syntax, relations)
-- Film (с ImageField для постеров, media details)
-- UserFilm (one-to-one/many-to-one checks, оценка/комментарий)
-- Базовые запросы и связи (ForeignKey, aggregations)
+- Film (с ImageField для постеров, media details) +
+- UserFilm (one-to-one/many-to-one checks, оценка/комментарий) +
+- Базовые запросы и связи (ForeignKey, aggregations) + 
 
 ### Этап 3. Внешний API (Integration, caching)
-- Интеграция с TMDB/OMDb API (fetch data, headers in requests)
-- Сохранение данных в БД (защита от дубликатов)
-- Кэширование (e.g., simple cache for API calls)
+- Интеграция с TMDB/OMDb API (fetch data, headers in requests) +
+- Сохранение данных в БД (защита от дубликатов) + 
+- Кэширование (e.g., simple cache for API calls) +
 
 ### Этап 4. Web-интерфейс (Templates, forms, bootstrap, password change/reset)
 - Поиск фильмов (search app с SearchVector или forms)

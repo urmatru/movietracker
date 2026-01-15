@@ -146,3 +146,6 @@ CACHES = {
         "LOCATION": "omdb-cache",
     }
 }
+
+#auth
+LOGIN_REDIRECT_URL = 'pages:home'

@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.urls import reverse
 
 # Create your views here.
 
@@ -26,7 +28,8 @@ def edit_profile(request):
         form = ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            messages.success(request, "Профиль успешно обновлен!")
+            return redirect(reverse('users:profile'))
     else:
         form = ProfileForm(instance=request.user)
     return render(request, 'profiles/edit_profile.html', {'form': form})

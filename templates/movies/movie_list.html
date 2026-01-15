@@ -19,7 +19,8 @@
 
         <p><strong>Average rating:</strong> {{ movie.avg_rating|floatformat:1 }} / 10 ({{ movie.num_reviews }} reviews)</p>
 
-        <a href="{% url 'movies:movie_detail' movie.id %}">View details →</a>
+        <a class="btn btn-primary" href="{% url 'movies:movie_detail' movie.id %}">View details →</a>
+
     </div>
 {% empty %}
     <p>No movies with reviews found.</p>

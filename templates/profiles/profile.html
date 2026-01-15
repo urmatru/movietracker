@@ -4,4 +4,19 @@
 <h2>{{ user.username }}'s Profile</h2>
 <p>Email: {{ user.email }}</p>
 <p><a href="{% url 'users:edit_profile' %}">Редактировать профиль</a></p>
+<p><a href="{% url 'reviews:add_review' %}">Добавить фильм в список</a></p>
+
+<h3>{{ user.username }}'s' movies:</h3>
+<ul>
+    {% for review in user.user_reviews.all %}
+        <li>
+            <strong>{{ review.movie.title }}</strong> - Rating: {{ review.rating }}/10
+            {% if review.comment %}
+                <br>Comment: {{ review.comment }}
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>You have not added any movies yet.</li>
+    {% endfor %}
+</ul>
 {% endblock %}
