@@ -4,21 +4,27 @@
 <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold text-indigo-600 mb-4">{{ user.username }}'s Profile</h2>
 
-    <p class="text-gray-700 mb-2"><strong>Email:</strong> {{ user.email }}</p>
+    <p class="text-gray-700 mb-4"><strong>Email:</strong> {{ user.email }}</p>
 
     <div class="flex space-x-4 mb-6">
         <a href="{% url 'users:edit_profile' %}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Редактировать профиль</a>
         <a href="{% url 'reviews:add_review' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Добавить фильм</a>
     </div>
 
-    <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ user.username }}'s movies:</h3>
-    <ul class="space-y-3">
+    <h3 class="text-xl font-semibold text-gray-800 mb-3">{{ user.username }}'s movies:</h3>
+    <ul class="space-y-4">
         {% for review in user.user_reviews.all %}
-            <li class="border rounded p-3 shadow-sm">
-                <strong class="text-indigo-600">{{ review.movie.title }}</strong> - Rating: {{ review.rating }}/10
-                {% if review.comment %}
-                    <p class="text-gray-700 mt-1">Comment: {{ review.comment }}</p>
+            <li class="flex items-start border rounded p-3 shadow-sm hover:shadow-md transition">
+                {% if review.movie.poster %}
+                    <img src="{{ review.movie.poster }}" alt="{{ review.movie.title }}" class="w-20 h-28 object-cover rounded mr-4">
                 {% endif %}
+                <div>
+                    <a href="{% url 'movies:movie_detail' review.movie.id %}" class="text-indigo-600 font-semibold text-lg hover:underline">{{ review.movie.title }}</a>
+                    <p class="text-gray-500">Rating: {{ review.rating }}/10</p>
+                    {% if review.comment %}
+                        <p class="text-gray-700 mt-1">{{ review.comment }}</p>
+                    {% endif %}
+                </div>
             </li>
         {% empty %}
             <li class="text-gray-500">You have not added any movies yet.</li>
