@@ -1,22 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ user.username }}'s Profile</h2>
-<p>Email: {{ user.email }}</p>
-<p><a href="{% url 'users:edit_profile' %}">Редактировать профиль</a></p>
-<p><a href="{% url 'reviews:add_review' %}">Добавить фильм в список</a></p>
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-indigo-600 mb-4">{{ user.username }}'s Profile</h2>
 
-<h3>{{ user.username }}'s' movies:</h3>
-<ul>
-    {% for review in user.user_reviews.all %}
-        <li>
-            <strong>{{ review.movie.title }}</strong> - Rating: {{ review.rating }}/10
-            {% if review.comment %}
-                <br>Comment: {{ review.comment }}
-            {% endif %}
-        </li>
-    {% empty %}
-        <li>You have not added any movies yet.</li>
-    {% endfor %}
-</ul>
+    <p class="text-gray-700 mb-2"><strong>Email:</strong> {{ user.email }}</p>
+
+    <div class="flex space-x-4 mb-6">
+        <a href="{% url 'users:edit_profile' %}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Редактировать профиль</a>
+        <a href="{% url 'reviews:add_review' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Добавить фильм</a>
+    </div>
+
+    <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ user.username }}'s movies:</h3>
+    <ul class="space-y-3">
+        {% for review in user.user_reviews.all %}
+            <li class="border rounded p-3 shadow-sm">
+                <strong class="text-indigo-600">{{ review.movie.title }}</strong> - Rating: {{ review.rating }}/10
+                {% if review.comment %}
+                    <p class="text-gray-700 mt-1">Comment: {{ review.comment }}</p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="text-gray-500">You have not added any movies yet.</li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

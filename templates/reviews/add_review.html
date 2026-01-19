@@ -1,27 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Add Movie to Your List</h2>
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-indigo-600 mb-4">Add Movie to Your List</h2>
 
-<form method="get">
-    <input type="text" name="q" placeholder="Search movie..." value="{{ query }}">
-    <button type="submit">Search</button>
-</form>
+    <!-- Search Form -->
+    <form method="get" class="flex mb-6 space-x-2">
+        <input type="text" name="q" placeholder="Search movie..."
+               value="{{ query }}"
+               class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+            Search
+        </button>
+    </form>
 
-{% if movie %}
-    <h3>{{ movie.title }} ({{ movie.year }})</h3>
-    {% if movie.poster %}
-        <img src="{{ movie.poster }}" width="150" alt="{{ movie.title }}">
+    {% if movie %}
+        <div class="flex flex-col md:flex-row md:space-x-6 mb-6 items-center">
+            {% if movie.poster %}
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="w-full md:w-48 rounded mb-4 md:mb-0 object-cover">
+            {% endif %}
+            <div class="flex-1">
+                <h3 class="text-xl font-semibold text-indigo-600">{{ movie.title }} ({{ movie.year }})</h3>
+            </div>
+        </div>
+
+        <!-- Review Form -->
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" 
+                    class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                Add Review
+            </button>
+        </form>
+    {% elif query %}
+        <p class="text-gray-500 mt-4">No movie found for "{{ query }}"</p>
     {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Add Review</button>
-    </form>
-{% elif query %}
-    <p>No movie found for "{{ query }}"</p>
-{% endif %}
-
-<a href="{% url 'users:profile' %}">← Back to profile</a>
+    <a href="{% url 'users:profile' %}" class="inline-block mt-6 text-indigo-600 hover:underline">
+        ← Back to profile
+    </a>
+</div>
 {% endblock %}

@@ -1,39 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if movie %}
-<h2>{{ movie.title }} ({{ movie.year }})</h2>
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    {% if movie %}
+        <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
+            {% if movie.poster %}
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="w-full md:w-64 rounded mb-4 md:mb-0 object-cover">
+            {% endif %}
+            <div class="flex-1">
+                <h2 class="text-2xl font-bold text-indigo-600">{{ movie.title }} ({{ movie.year }})</h2>
+                <p class="text-gray-700 mt-2"><strong>Description:</strong> {{ movie.description }}</p>
+            </div>
+        </div>
 
-{% if movie.poster %}
-    <img src="{{ movie.poster }}" alt="{{ movie.title }}" width="200">
-{% endif %}
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Reviews</h3>
+        <ul class="space-y-3">
+            {% for review in reviews %}
+                <li class="border rounded p-3 shadow-sm">
+                    <strong class="text-indigo-600">{{ review.user.username }}</strong>: {{ review.rating }}/10
+                    {% if review.comment %}
+                        <p class="text-gray-700 mt-1">{{ review.comment }}</p>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="text-gray-500">No reviews yet</li>
+            {% endfor %}
+        </ul>
 
-<p><strong>Description:</strong> {{ movie.description }}</p>
-
-<!-- {% if movie.omdb_data %}
-    <p><strong>Genre:</strong> {{ movie.omdb_data.Genre }}</p>
-    <p><strong>Director:</strong> {{ movie.omdb_data.Director }}</p>
-    <p><strong>Actors:</strong> {{ movie.omdb_data.Actors }}</p>
-    <p><strong>Language:</strong> {{ movie.omdb_data.Language }}</p>
-    <p><strong>Country:</strong> {{ movie.omdb_data.Country }}</p>
-    <p><strong>IMDb Rating:</strong> {{ movie.omdb_data.imdbRating }}</p>
-{% endif %} -->
-
-<h3>Reviews</h3>
-<ul>
-    {% for review in reviews %}
-        <li>
-            <strong>{{ review.user.username }}</strong>: {{ review.rating }}/10
-            <br>{{ review.comment }}
-        </li>
-    {% empty %}
-        <li>No reviews yet</li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'movies:movie_list' %}">← Back to movies</a>
-
-{% else %}
-<p>No movie found for "{{ query }}"</p>
-{% endif %}
+        <a href="{% url 'movies:movie_list' %}" class="inline-block mt-4 text-indigo-600 hover:underline">
+            ← Back to movies
+        </a>
+    {% else %}
+        <p class="text-gray-500">No movie found for "{{ query }}"</p>
+    {% endif %}
+</div>
 {% endblock %}

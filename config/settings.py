@@ -25,13 +25,12 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-tu_89z98ct60y5_chkx6w_ifioxm=7^)8ssu#u53!8gxa3hd)3"
+SECRET_KEY = os.environ.get("SECRET_KEY", "its-a-secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 
 # Application definition
 
@@ -87,8 +86,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+         "ENGINE": os.environ.get("DATABASE_ENGINE", "django.db.backends.sqlite3"),
+         "NAME": os.environ.get("DATABASE_NAME", BASE_DIR / "db.sqlite3"),
+         "USER": os.environ.get("DATABASE_USER", ""),
+         "PASSWORD": os.environ.get("DATABASE_PASSWORD", ""),
+         "HOST": os.environ.get("DATABASE_HOST", "127.0.0.1"),
+         "PORT": os.environ.get("DATABASE_PORT", "5432"),
     }
 }
 
@@ -128,6 +131,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media/"
 
 
 # user
@@ -149,3 +156,18 @@ CACHES = {
 
 #auth
 LOGIN_REDIRECT_URL = 'pages:home'
+
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND", 
+    "django.core.mail.backends.console.EmailBackend"
+)
+
+# Security 
+if DEBUG: 
+    SECURE_SSL_REDIRECT = False
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+else:
+    SECURE_SSL_REDIRECT = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True

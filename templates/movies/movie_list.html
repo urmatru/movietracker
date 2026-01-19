@@ -1,29 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Movies with Reviews</h2>
+<div class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-indigo-600 mb-4">Movies with Reviews</h2>
 
-<form method="get" action="{% url 'movies:search' %}">
-    <input type="text" name="q" placeholder="Movie title" value="{{ request.GET.q }}">
-    <button type="submit">Search</button>
-</form>
+    <form method="get" action="{% url 'movies:search' %}" class="flex mb-6 space-x-2">
+        <input type="text" name="q" placeholder="Movie title" value="{{ request.GET.q }}"
+               class="flex-1 border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-600">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+            Search
+        </button>
+    </form>
 
-<div>
-{% for movie in movies %}
-    <div style="margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
-        <h3>{{ movie.title }} ({{ movie.year }})</h3>
-        {% if movie.poster %}
-            <img src="{{ movie.poster }}" alt="{{ movie.title }}" width="150">
-        {% endif %}
-        <p>{{ movie.description|truncatewords:30 }}</p>
-
-        <p><strong>Average rating:</strong> {{ movie.avg_rating|floatformat:1 }} / 10 ({{ movie.num_reviews }} reviews)</p>
-
-        <a class="btn btn-primary" href="{% url 'movies:movie_detail' movie.id %}">View details →</a>
-
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for movie in movies %}
+        <div class="bg-white p-4 rounded-lg shadow-md flex flex-col">
+            {% if movie.poster %}
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="rounded mb-3 w-full h-64 object-cover">
+            {% endif %}
+            <h3 class="text-xl font-semibold text-indigo-600">{{ movie.title }} ({{ movie.year }})</h3>
+            <p class="text-gray-700 mt-1">{{ movie.description|truncatewords:30 }}</p>
+            <p class="mt-2 text-gray-800"><strong>Avg rating:</strong> {{ movie.avg_rating|floatformat:1 }}/10 ({{ movie.num_reviews }} reviews)</p>
+            <a href="{% url 'movies:movie_detail' movie.id %}" 
+               class="mt-auto bg-indigo-600 text-white text-center px-3 py-2 rounded hover:bg-indigo-700 transition">
+               View details →
+            </a>
+        </div>
+        {% empty %}
+            <p class="text-gray-500">No movies with reviews found.</p>
+        {% endfor %}
     </div>
-{% empty %}
-    <p>No movies with reviews found.</p>
-{% endfor %}
 </div>
 {% endblock %}

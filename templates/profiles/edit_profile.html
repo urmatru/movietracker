@@ -1,17 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Edit profile</h2>
+<div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md space-y-4">
+    <h2 class="text-2xl font-bold text-indigo-600 mb-4 text-center">Edit Profile</h2>
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
+            Save
+        </button>
+    </form>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
+    <hr class="my-4 border-gray-300">
 
-<hr>
-
-<a href="{% url 'users:password_change' %}">
-    Change password
-</a>
+    <div class="text-center">
+        <a href="{% url 'users:password_change' %}" class="text-indigo-600 hover:underline">
+            Change password
+        </a>
+    </div>
+</div>
 {% endblock %}
