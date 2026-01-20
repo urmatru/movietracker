@@ -11,8 +11,8 @@
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
-        value: "False"
+        value: "True"
       - key: ALLOWED_HOSTS
-        value: "movietracker.onrender.com"
+        value: "movietracker-w0jm.onrender.com"
       - key: OMDB_API_KEY
         value: aa00b4f4
