@@ -2,12 +2,12 @@
 
 {% block content %}
 <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold text-indigo-600 mb-4 text-center">Смена пароля</h2>
+    <h2 class="text-2xl font-bold text-indigo-600 mb-4 text-center">Регистрация</h2>
     <form method="post" class="space-y-4">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition">
-            Изменить пароль
+            Зарегистрироваться
         </button>
     </form>
 </div>
