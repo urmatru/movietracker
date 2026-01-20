@@ -16,20 +16,28 @@ def add_review(request):
         # сначала ищем в базе
         movie = Movie.objects.filter(title__icontains=query).first()
         if not movie:
-            client = OMDBClient()
-            result = client.search_movie(query)
-            movies_data = result.get("Search", [])
-            if movies_data:
-                data = movies_data[0]
-                movie, created = Movie.objects.get_or_create(
-                    external_id=data["imdbID"],
-                    defaults={
-                        "title": data["Title"],
-                        "description": data.get("Plot", ""),
-                        "year": int(data["Year"]) if data["Year"].isdigit() else None,
-                        "poster": data.get("Poster", "")
-                    }
-                )
+            try:
+                client = OMDBClient()
+                result = client.search_movie(query)
+                movies_data = result.get("Search", [])
+                if movies_data:
+                    data = movies_data[0]
+                    movie, created = Movie.objects.get_or_create(
+                        external_id=data["imdbID"],
+                        defaults={
+                            "title": data["Title"],
+                            "description": data.get("Plot", ""),
+                            "year": int(data["Year"]) if data["Year"].isdigit() else None,
+                            "poster": data.get("Poster", "")
+                        }
+                    )
+                else: 
+                    print("No Search in OMDB result")
+            except Exception as e:
+                print("OMDB Error:", str(e))
+                raise
+                 
+    
 
     if request.method == "POST":
         form = AddReviewForm(request.POST)
