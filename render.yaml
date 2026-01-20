@@ -1,0 +1,18 @@
+﻿services:
+  - type: web
+    name: movietracker
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.6
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "movietracker.onrender.com"
+      - key: OMDB_API_KEY
+        value: aa00b4f4
