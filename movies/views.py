@@ -18,11 +18,22 @@ def movie_list(request):
 
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
+    if not movie.description:
+        try:
+            client = OMDBClient()
+            full_data = client.get_movie_by_imdb_id(movie.external_id)
+            plot = full_data.get("Plot", "")
+            if plot and plot != "N/A":
+                movie.description = plot
+                movie.save(update_fields=["description"])
+        except Exception as e:
+            print("OMDB error", e)
+            
     reviews = movie.movie_reviews.all()
     return render(
         request, 
         "movies/movie_detail.html",
-        {"movie": movie, "reviews": reviews}
+        {"movie": movie, "reviews": reviews }
     )
 
 def search_view(request):

@@ -26,7 +26,7 @@ def add_review(request):
                         external_id=data["imdbID"],
                         defaults={
                             "title": data["Title"],
-                            "description": data.get("Plot", ""),
+                            "description": "",
                             "year": int(data["Year"]) if data["Year"].isdigit() else None,
                             "poster": data.get("Poster", "")
                         }
@@ -37,8 +37,6 @@ def add_review(request):
                 print("OMDB Error:", str(e))
                 raise
                  
-    
-
     if request.method == "POST":
         form = AddReviewForm(request.POST)
         if form.is_valid() and movie:

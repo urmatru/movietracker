@@ -17,9 +17,21 @@
                     {% endif %}
 
                     <div class="flex-1 p-4">
-                        <h2 class="text-xl font-semibold text-indigo-600">{{ review.movie.title }} ({{ review.movie.year }})</h2>
-                        <p class="text-gray-700 mt-1"><strong>By:</strong> {{ review.user.username }}</p>
-                        <p class="text-gray-600 mt-1"><strong>Rating:</strong> {{ review.rating }}/10</p>
+                        <h2 class="text-xl font-semibold text-indigo-600">
+                            <a href="{% url 'movies:movie_detail' review.movie.id %}"
+                               class="hover:underline hover:text-indigo-800 transition">
+                                {{ review.movie.title }} ({{ review.movie.year }})
+                            </a>
+                        </h2>
+
+                        <p class="text-gray-700 mt-1">
+                            <strong>By:</strong> {{ review.user.username }}
+                        </p>
+
+                        <p class="text-gray-600 mt-1">
+                            <strong>Rating:</strong> {{ review.rating }}/10
+                        </p>
+
                         {% if review.comment %}
                             <p class="text-gray-500 mt-2">{{ review.comment }}</p>
                         {% endif %}
