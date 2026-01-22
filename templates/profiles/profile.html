@@ -1,59 +1,196 @@
 {% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Profile - MovieTracker{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto mt-8 bg-white rounded-lg shadow p-6">
-
-    <div class="flex items-center space-x-6 mb-6">
-
-        <!-- Avatar -->
-        {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" class="w-24 h-24 rounded-full object-cover border">
-        {% else %}
-            <div class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                No avatar
-            </div>
-        {% endif %}
-
-        <!-- User info -->
-        <div>
-            <h1 class="text-3xl font-bold text-indigo-600">{{ user.username }}</h1>
-
-            {% if user.country %}
-                <p class="text-gray-600 flex items-center space-x-2 mt-1">
-                    <span>{{ user.country }}</span>
-                    {% if user.country_code %}
-                        <img src="https://flagcdn.com/w20/{{ user.country_code|lower }}.png"
-                             alt="{{ user.country }}" class="inline-block">
+<div class="max-w-5xl mx-auto">
+    <!-- Profile Header Card -->
+    <div class="glass-effect rounded-3xl overflow-hidden shadow-2xl mb-8">
+        <!-- Cover Background -->
+        <div class="h-40 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 relative">
+            <div class="absolute inset-0 bg-black/10"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white/20 to-transparent"></div>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="px-8 pb-8 -mt-16 relative">
+            <div class="flex flex-col md:flex-row md:items-end md:space-x-6">
+                <!-- Avatar -->
+                <div class="relative mb-4 md:mb-0">
+                    {% if user.avatar %}
+                        <div class="relative group">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur opacity-50"></div>
+                            <img src="{{ user.avatar.url }}" 
+                                 class="relative w-32 h-32 rounded-full object-cover border-4 border-white shadow-xl">
+                        </div>
+                    {% else %}
+                        <div class="relative">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur opacity-50"></div>
+                            <div class="relative w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-xl">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                        </div>
                     {% endif %}
-                </p>
-            {% endif %}
+                </div>
+
+                <!-- User Info -->
+                <div class="flex-1">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800 mb-1">{{ user.username }}</h1>
+                            {% if user.country %}
+                                <div class="flex items-center text-gray-600">
+                                    <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    <span>{{ user.country }}</span>
+                                    {% if user.country_code %}
+                                        <img src="https://flagcdn.com/w20/{{ user.country_code|lower }}.png"
+                                             alt="{{ user.country }}" 
+                                             class="ml-2 rounded shadow-sm">
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Stats -->
+                        <div class="flex items-center space-x-6 mt-4 md:mt-0">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-indigo-600">{{ user.user_reviews.count }}</div>
+                                <div class="text-sm text-gray-500">Reviews</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-purple-600">
+                                    {% with reviews=user.user_reviews.all %}
+                                        {% if reviews %}
+                                            {{ reviews|length }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <div class="text-sm text-gray-500">Movies</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap gap-3 mt-6">
+                <a href="{% url 'users:edit_profile' %}" 
+                   class="inline-flex items-center px-5 py-2.5 btn-gradient text-white rounded-xl font-semibold shadow-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit Profile
+                </a>
+                <a href="{% url 'reviews:add_review' %}" 
+                   class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-green-500/30 transition-all hover:scale-105">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Movie
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Actions -->
-    <div class="flex space-x-4 mb-6">
-        <a href="{% url 'users:edit_profile' %}" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Редактировать профиль</a>
-        <a href="{% url 'reviews:add_review' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Добавить фильм</a>
-    </div>
+    <!-- User's Movies Section -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                <svg class="w-7 h-7 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                </svg>
+                {{ user.username }}'s Movies
+            </h2>
+        </div>
 
-    <!-- User's movies via reviews -->
-    <h3 class="text-xl font-semibold text-gray-800 mb-3">{{ user.username }}'s movies:</h3>
-    <ul class="space-y-4">
-        {% for review in user.user_reviews.all %}
-            <li class="flex items-start border rounded p-3 shadow-sm hover:shadow-md transition">
-                {% if review.movie.poster %}
-                    <img src="{{ review.movie.poster }}" alt="{{ review.movie.title }}" class="w-20 h-28 object-cover rounded mr-4">
-                {% endif %}
-                <div>
-                    <a href="{% url 'movies:movie_detail' review.movie.id %}" class="text-indigo-600 font-semibold text-lg hover:underline">{{ review.movie.title }}</a>
-                    <p class="text-gray-500">Rating: {{ review.rating }}/10</p>
-                    {% if review.comment %}
-                        <p class="text-gray-700 mt-1">{{ review.comment }}</p>
-                    {% endif %}
+        {% if user.user_reviews.all %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for review in user.user_reviews.all %}
+                    <div class="glass-effect rounded-2xl overflow-hidden shadow-lg card-hover group">
+                        <div class="flex">
+                            <!-- Movie Poster -->
+                            <div class="relative w-28 md:w-36 flex-shrink-0">
+                                {% if review.movie.poster %}
+                                    <img src="{{ review.movie.poster }}" 
+                                         alt="{{ review.movie.title }}" 
+                                         class="w-full h-full object-cover">
+                                {% else %}
+                                    <div class="w-full h-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                        <svg class="w-10 h-10 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                                
+                                <!-- Rating Badge -->
+                                <div class="absolute top-2 left-2">
+                                    <div class="flex items-center px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-lg shadow-lg">
+                                        <svg class="w-4 h-4 text-white mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                        </svg>
+                                        <span class="text-white font-bold text-sm">{{ review.rating }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Content -->
+                            <div class="flex-1 p-5">
+                                <a href="{% url 'movies:movie_detail' review.movie.id %}" 
+                                   class="block">
+                                    <h3 class="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors mb-1 line-clamp-1">
+                                        {{ review.movie.title }}
+                                    </h3>
+                                    {% if review.movie.year %}
+                                        <span class="text-sm text-gray-500">{{ review.movie.year }}</span>
+                                    {% endif %}
+                                </a>
+
+                                {% if review.comment %}
+                                    <p class="text-gray-600 text-sm mt-3 line-clamp-3">
+                                        "{{ review.comment }}"
+                                    </p>
+                                {% endif %}
+
+                                <div class="mt-4">
+                                    <a href="{% url 'movies:movie_detail' review.movie.id %}" 
+                                       class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium text-sm transition-colors">
+                                        View Details
+                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="glass-effect rounded-2xl p-12 text-center">
+                <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>
+                    </svg>
                 </div>
-            </li>
-        {% empty %}
-            <li class="text-gray-500">You have not added any movies yet.</li>
-        {% endfor %}
-    </ul>
+                <h3 class="text-2xl font-bold text-gray-700 mb-2">No Movies Yet</h3>
+                <p class="text-gray-500 mb-6 max-w-md mx-auto">
+                    Start building your movie collection! Search for movies and add your reviews.
+                </p>
+                <a href="{% url 'reviews:add_review' %}" 
+                   class="btn-gradient inline-flex items-center text-white px-6 py-3 rounded-full font-semibold shadow-lg">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add Your First Movie
+                </a>
+            </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
