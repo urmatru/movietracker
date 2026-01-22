@@ -50,6 +50,11 @@ INSTALLED_APPS = [
     'users',
     'backend.pages',
 
+    # front
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "widget_tweaks",
+
 ]
 
 MIDDLEWARE = [
@@ -167,3 +172,8 @@ else:
     SECURE_SSL_REDIRECT = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
+
+# crispy forms
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

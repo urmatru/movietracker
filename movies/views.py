@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Avg, Count
 from movies.services.omdb import OMDBClient
 from .models import Movie
+from reviews.forms import CommentForm
 # Create your views here.
 
 def movie_list(request):
@@ -33,7 +34,7 @@ def movie_detail(request, movie_id):
     return render(
         request, 
         "movies/movie_detail.html",
-        {"movie": movie, "reviews": reviews }
+        {"movie": movie, "reviews": reviews, "comment_form": CommentForm(), }
     )
 
 def search_view(request):

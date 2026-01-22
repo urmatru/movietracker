@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from .forms import AddReviewForm
 from django.contrib import messages
 from movies.models import Movie
 from movies.services.omdb import OMDBClient
+from reviews.models import Review, Comment
+from reviews.forms import CommentForm
 
 
 # Create your views here.
@@ -61,3 +64,27 @@ def add_review(request):
         "query": query,
     })
 
+@login_required
+def add_comment(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.review = review 
+            comment.author = request.user
+            comment.save()
+        
+    return redirect("movies:movie_detail", review.movie.id)
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if comment.author != request.user:
+        return HttpResponseForbidden("You can delete only your own comments")
+    
+    movie_id = comment.review.movie.id
+    comment.delete()
+
+    return redirect("movies:movie_detail", movie_id)

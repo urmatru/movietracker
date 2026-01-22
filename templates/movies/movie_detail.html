@@ -1,37 +1,129 @@
 {% extends "base.html" %}
-
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
 {% block content %}
 <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
     {% if movie %}
-        <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
+        <!-- Movie info -->
+        <div class="flex flex-col md:flex-row md:space-x-6 mb-6">
             {% if movie.poster %}
-                <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="w-full md:w-64 rounded mb-4 md:mb-0 object-cover">
+                <img src="{{ movie.poster }}"
+                     alt="{{ movie.title }}"
+                     class="w-full md:w-64 rounded mb-4 md:mb-0 object-cover">
             {% endif %}
+
             <div class="flex-1">
-                <h2 class="text-2xl font-bold text-indigo-600">{{ movie.title }} ({{ movie.year }})</h2>
-                <p class="text-gray-700 mt-2"><strong>Description:</strong> {{ movie.description }}</p>
+                <h2 class="text-2xl font-bold text-indigo-600">
+                    {{ movie.title }} ({{ movie.year }})
+                </h2>
+                {% if movie.description %}
+                    <p class="text-gray-700 mt-2">
+                        <strong>Description:</strong> {{ movie.description }}
+                    </p>
+                {% endif %}
             </div>
         </div>
 
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">Reviews</h3>
-        <ul class="space-y-3">
-            {% for review in reviews %}
-                <li class="border rounded p-3 shadow-sm">
-                    <strong class="text-indigo-600">{{ review.user.username }}</strong>: {{ review.rating }}/10
-                    {% if review.comment %}
-                        <p class="text-gray-700 mt-1">{{ review.comment }}</p>
-                    {% endif %}
-                </li>
-            {% empty %}
-                <li class="text-gray-500">No reviews yet</li>
-            {% endfor %}
-        </ul>
+        <!-- Reviews -->
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Reviews</h3>
 
-        <a href="{% url 'movies:movie_list' %}" class="inline-block mt-4 text-indigo-600 hover:underline">
+        {% for review in reviews %}
+            <div class="border rounded p-4 shadow-sm mb-6">
+
+                <!-- Review header with avatar -->
+                <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center">
+                        {% if review.user.avatar %}
+                            <img src="{{ review.user.avatar.url }}" class="w-8 h-8 rounded-full mr-2">
+                        {% endif %}
+                        <strong class="text-indigo-600">{{ review.user.username }}</strong>
+                    </div>
+                    <span class="text-gray-600 text-sm">{{ review.rating }}/10</span>
+                </div>
+
+                <!-- Review comment aligned under username -->
+                {% if review.comment %}
+                    <div class="flex items-start mt-1">
+                        <p class="text-gray-700 ml-10 flex-1">{{ review.comment }}</p>
+                        {% if user.is_authenticated %}
+                            <button type="button"
+                                    class="text-indigo-600 hover:text-indigo-800 ml-2 flex-shrink-0"
+                                    onclick="document.getElementById('comments-{{ review.id }}').classList.toggle('hidden')"
+                                    title="Комментировать">
+                                💬
+                            </button>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    {% if user.is_authenticated %}
+                        <div class="flex justify-end mt-2">
+                            <button type="button"
+                                    class="text-indigo-600 hover:text-indigo-800"
+                                    onclick="document.getElementById('comments-{{ review.id }}').classList.toggle('hidden')"
+                                    title="Комментировать">
+                                💬
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <!-- Comments block -->
+                <div id="comments-{{ review.id }}" class="mt-3 {% if review.review_comments.count == 0 %}hidden{% endif %}">
+                    {% if review.review_comments.exists %}
+                        <h4 class="font-semibold text-sm text-gray-700 mb-2">Comments</h4>
+                        {% for comment in review.review_comments.all %}
+                            <div class="border-l pl-3 text-sm flex flex-col mb-2">
+                                <div class="flex items-center">
+                                    {% if comment.author.avatar %}
+                                        <img src="{{ comment.author.avatar.url }}" class="w-6 h-6 rounded-full mr-2">
+                                    {% endif %}
+                                    <span class="font-semibold text-indigo-600">{{ comment.author.username }}</span>
+                                </div>
+                                <p class="text-gray-700 mt-1 ml-8">{{ comment.text }}</p>
+                                {% if comment.author == user %}
+                                    <div class="self-end mt-1">
+                                        <form method="post" action="{% url 'reviews:delete_comment' comment.id %}">
+                                            {% csrf_token %}
+                                            <button class="text-red-500 text-xs hover:underline">Delete</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <!-- Comment form -->
+                    <!-- Comment form -->
+                    {% if user.is_authenticated %}
+                         <form method="post" action="{% url 'reviews:add_comment' review.id %}" class="mt-2 flex flex-col space-y-2 w-full">
+                        {% csrf_token %}
+                        {{ comment_form.text|add_class:"w-full p-2 border rounded resize-none" }}
+                        <div class="flex justify-end">
+                            <button class="bg-indigo-600 text-white px-4 py-1 rounded text-sm hover:bg-indigo-700">
+                                Send
+                            </button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+            <p class="text-gray-500">No reviews yet</p>
+        {% endfor %}
+
+        <a href="{% url 'movies:movie_list' %}"
+           class="inline-block mt-4 text-indigo-600 hover:underline">
             ← Back to movies
         </a>
+
     {% else %}
-        <p class="text-gray-500">No movie found for "{{ query }}"</p>
+        <p class="text-gray-500">
+            No movie found for "{{ query }}"
+        </p>
     {% endif %}
 </div>
 {% endblock %}

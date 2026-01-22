@@ -34,5 +34,5 @@ def print_project_tree(path: Path, tree: Tree = None, ignore_dirs=None, max_dept
 
 console = Console()
 path = Path(".")  # текущая папка проекта
-tree = print_project_tree(path, max_depth=3)  # ограничиваем глубину до 3 уровней, чтобы не углубляться дальше приложений
+tree = print_project_tree(path, max_depth=10)  # ограничиваем глубину до 3 уровней, чтобы не углубляться дальше приложений
 console.print(tree)
