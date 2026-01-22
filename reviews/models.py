@@ -50,4 +50,7 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.author} -> Review {self.review.id}"
     
-    
+
+# class ReviewReaction(models.Model):
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     review = models.ForeignKey(Review, on_delete=models.CASCADE, relate_name=) 
