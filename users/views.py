@@ -39,7 +39,7 @@ def edit_profile(request):
                 user.country = ""
             form.save()
             messages.success(request, "Профиль успешно обновлен!")
-            return redirect(reverse('pages:profile'))
+            return redirect(reverse('users:profile'))
     else:
         form = ProfileForm(instance=request.user)
 
