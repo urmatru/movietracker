@@ -28,3 +28,4 @@ class ProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance.country:
             self.initial['country'] = self.instance.country
+

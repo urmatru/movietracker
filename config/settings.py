@@ -177,3 +177,10 @@ else:
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# backends
+
+AUTHENTICATION_BACKENDS = [
+    'users.backends.EmailOrUsernameBackend',
+   # 'django.contrib.auth.backends.ModelBackend',
+]
